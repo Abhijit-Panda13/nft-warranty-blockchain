@@ -2,6 +2,7 @@ import '../styles/globals.css'
 import { MoralisProvider } from 'react-moralis'
 import { FlipkartProvider } from '../context/FlipkartContext'
 
+
 function MyApp({ Component, pageProps }) {
   return (
     <MoralisProvider
@@ -11,9 +12,8 @@ function MyApp({ Component, pageProps }) {
       <FlipkartProvider>
         <Component {...pageProps} />
       </FlipkartProvider>
-      
     </MoralisProvider>
-  )
+  );
 }
 
-export default MyApp
+export default MyApp;

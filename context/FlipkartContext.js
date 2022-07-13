@@ -8,6 +8,7 @@ export const FlipkartProvider = ({ children }) => {
   const [username, setUsername] = useState('')
   const [assets, setAssets] = useState([])
 
+
   const {
     authenticate,
     isAuthenticated,
@@ -44,6 +45,7 @@ export const FlipkartProvider = ({ children }) => {
     }
     
   }, [isWeb3Enabled, assetsData, assetsDataIsLoading])
+
 
   const handleSetUsername = () => {
     if (user) {
@@ -88,3 +90,4 @@ export const FlipkartProvider = ({ children }) => {
 
 
 }
+
