@@ -1,11 +1,13 @@
-import { createContext, useState, useEffect } from "react";
-import { useMoralis, useMoralisQuery } from "react-moralis";
+import { createContext, useState, useEffect } from 'react'
+import { useMoralis, useMoralisQuery } from 'react-moralis'
 
-export const FlipkartContext = createContext();
+export const FlipkartContext = createContext()
 
 export const FlipkartProvider = ({ children }) => {
-  const [nickname, setNickname] = useState("");
-  const [username, setUsername] = useState("");
+  const [nickname, setNickname] = useState('')
+  const [username, setUsername] = useState('')
+  const [assets, setAssets] = useState([])
+
 
   const {
     authenticate,
@@ -14,42 +16,78 @@ export const FlipkartProvider = ({ children }) => {
     Moralis,
     user,
     isWeb3Enabled,
-  } = useMoralis();
+  } = useMoralis()
+
+  const {
+    data: assetsData,
+    error: assetsDataError,
+    isLoading: assetsDataIsLoading,
+  } = useMoralisQuery('assets')
 
   useEffect(() => {
-    async () => {
-      if (isAuthenticated) {
-        const currentUsername = await user?.get("nickname");
-        setUsername(currentUsername);
-      }
-    };
-  }, [isAuthenticated, user, username]);
+    async function fetchData() {
+        if(isAuthenticated) {
+            const currentUsername = await user?.get('nickname')
+            setUsername(currentUsername);
+            console.log("Boom", username);
+        }
+    }
+    fetchData();
+  }, [isAuthenticated, user, username])
+
+  useEffect(() =>{
+    async function fetchData() {
+        console.log(assetsData)
+        await getAssets()
+    }
+    if(isWeb3Enabled){
+        fetchData()
+    }
+    
+  }, [isWeb3Enabled, assetsData, assetsDataIsLoading])
+
 
   const handleSetUsername = () => {
     if (user) {
       if (nickname) {
-        user.set("nickname", nickname);
-        user.save();
-        setNickname("");
+        user.set('nickname', nickname)
+        user.save()
+        setNickname('')
       } else {
-        console.log("Can't set empty nickname");
+        console.log("Can't set empty nickname")
       }
     } else {
-      console.log("No user");
+      console.log('No user')
     }
-  };
+  }
+
+  const getAssets = async () => {
+    try {
+      await enableWeb3()
+      // const query = new Moralis.Query('Assets')
+      // const results = await query.find()
+
+      setAssets(assetsData)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <FlipkartContext.Provider
-      value={{
-        isAuthenticated,
-        nickname,
-        setNickname,
-        username,
-        handleSetUsername,
-      }}
+        value={{
+            isAuthenticated,
+            nickname,
+            setNickname,
+            username,
+            handleSetUsername,
+            assets
+        }}
     >
-      {children}
+        {children}
     </FlipkartContext.Provider>
-  );
-};
+  )
+
+
+}
+

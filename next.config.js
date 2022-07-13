@@ -10,6 +10,12 @@
       'media3.giphy.com',
       'media2.giphy.com',
       'media4.giphy.com',
+      'www.stfoto.nl',
+      'p3-ofp.static.pub',
+      'store.storeimages.cdn-apple.com',
+      'yamaha.ndcdn.in',
+      'rukminim1.flixcart.com',
+      'newassets.apollo247.com',
     ],
   },
 }

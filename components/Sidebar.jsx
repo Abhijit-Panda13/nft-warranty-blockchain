@@ -34,7 +34,7 @@ const Sidebar = () => {
     username,
     handleSetUsername,
   } = useContext(FlipkartContext)
- 
+  console.log("Username", username);
 
   return (
     <div className={styles.container}>

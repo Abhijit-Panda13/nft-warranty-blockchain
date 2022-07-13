@@ -1,6 +1,7 @@
-import "../styles/globals.css";
-import { MoralisProvider } from "react-moralis";
-import { FlipkartProvider } from "../context/FlipkartContext";
+import '../styles/globals.css'
+import { MoralisProvider } from 'react-moralis'
+import { FlipkartProvider } from '../context/FlipkartContext'
+
 
 function MyApp({ Component, pageProps }) {
   return (
