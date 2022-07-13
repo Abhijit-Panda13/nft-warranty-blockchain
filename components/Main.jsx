@@ -1,9 +1,9 @@
-import React, { useContext, useEffect } from 'react'
-import { FlipkartContext } from '../context/FlipkartContext'
+import React, { useContext, useEffect } from "react";
+import { FlipkartContext } from "../context/FlipkartContext";
 
-import Cards from './Cards'
+import Cards from "./Cards";
 // import Featured from './Featured'
-// import Header from './Header'
+import Header from "./Header";
 
 const Main = () => {
   const styles = {
@@ -11,13 +11,13 @@ const Main = () => {
     recentTitle: `text-2xl font-bold text-center mb-[20px] text-center mt-[40px]`,
     recentTransactionsList: `flex flex-col`,
     transactionCard: `flex justify-between mb-[20px] p-[30px] bg-[#42667e] text-white rounded-xl shadow-xl font-bold gap-[20px] text-xl`,
-  }
-//   const { recentTransactions } = useContext(FlipkartContext)
+  };
+  //   const { recentTransactions } = useContext(FlipkartContext)
 
   return (
     <div className={styles.container}>
-      {/* <Header />
-      <Featured /> */}
+      <Header />
+      {/* <Featured /> */}
       <Cards />
       {/* {recentTransactions.length > 0 && (
         <h1 className={styles.recentTitle}>Recent Transaction</h1>
@@ -46,7 +46,7 @@ const Main = () => {
           )
         })} */}
     </div>
-  )
-}
+  );
+};
 
-export default Main
+export default Main;
