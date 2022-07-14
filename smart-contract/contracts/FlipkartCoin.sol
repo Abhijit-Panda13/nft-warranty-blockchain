@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract FlipkartCoin is ERC20, Ownable {
-    constructor() ERC20("FlipkartCoin", "AC") {}
+    constructor() ERC20("FlipkartCoin", "SC") {}
 
     function mint(uint256 amount) public payable {
         require(msg.value == amount * 0.0001 ether, "invalid amount of ether");
