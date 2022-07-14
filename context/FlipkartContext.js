@@ -1,12 +1,20 @@
 import { createContext, useState, useEffect } from 'react'
 import { useMoralis, useMoralisQuery } from 'react-moralis'
+import { flipkartAbi, flipkartCoinAddress } from '../lib/constants'
+import { ethers } from 'ethers'
 
 export const FlipkartContext = createContext()
 
 export const FlipkartProvider = ({ children }) => {
-  const [nickname, setNickname] = useState('')
-  const [username, setUsername] = useState('')
-  const [assets, setAssets] = useState([])
+    const [currentAccount, setCurrentAccount] = useState('')
+    const [balance, setBalance] = useState('')
+    const [tokenAmount, setTokenAmount] = useState('')
+    const [amountDue, setAmountDue] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
+    const [etherscanLink, setEtherscanLink] = useState('')
+    const [nickname, setNickname] = useState('')
+    const [username, setUsername] = useState('')
+    const [assets, setAssets] = useState([])
 
 
   const {
@@ -27,13 +35,15 @@ export const FlipkartProvider = ({ children }) => {
   useEffect(() => {
     async function fetchData() {
         if(isAuthenticated) {
+            await getBalance()
             const currentUsername = await user?.get('nickname')
             setUsername(currentUsername);
-            console.log("Boom", username);
+            const account = await user?.get('ethAddress');
+            setCurrentAccount(account);
         }
     }
     fetchData();
-  }, [isAuthenticated, user, username])
+  }, [isAuthenticated, user, username, currentAccount])
 
   useEffect(() =>{
     async function fetchData() {
@@ -46,6 +56,11 @@ export const FlipkartProvider = ({ children }) => {
     
   }, [isWeb3Enabled, assetsData, assetsDataIsLoading])
 
+
+  const connectWallet = async () => {
+    await enableWeb3()
+    await authenticate()
+  }
 
   const handleSetUsername = () => {
     if (user) {
@@ -73,6 +88,57 @@ export const FlipkartProvider = ({ children }) => {
     }
   }
 
+  const buyTokens = async () => {
+    if (!isAuthenticated) {
+      await connectWallet()
+    }
+
+    const amount = ethers.BigNumber.from(tokenAmount)
+    const price = ethers.BigNumber.from('100000000000000')
+    const calcPrice = amount.mul(price)
+
+    console.log(flipkartCoinAddress)
+
+    let options = {
+      contractAddress: flipkartCoinAddress,
+      functionName: 'mint',
+      abi: flipkartAbi,
+      msgValue: calcPrice,
+      params: {
+        amount,
+      },
+    }
+    const transaction = await Moralis.executeFunction(options)
+    const receipt = await transaction.wait()
+    setIsLoading(false)
+    console.log(receipt)
+    setEtherscanLink(
+        `https://polygonscan.com/tx/${receipt.transactionHash}`,
+    )
+  }
+
+  const getBalance = async () => {
+    try {
+      if (!isAuthenticated || !currentAccount) return
+      const options = {
+        contractAddress: flipkartCoinAddress,
+        functionName: 'balanceOf',
+        abi: flipkartAbi,
+        params: {
+          account: currentAccount,
+        },
+      }
+
+      if (isWeb3Enabled) {
+        const response = await Moralis.executeFunction(options)
+        console.log(response.toString())
+        setBalance(response.toString())
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <FlipkartContext.Provider
         value={{
@@ -81,7 +147,17 @@ export const FlipkartProvider = ({ children }) => {
             setNickname,
             username,
             handleSetUsername,
-            assets
+            assets,
+            balance,
+            setTokenAmount,
+            tokenAmount,
+            amountDue,
+            setAmountDue,
+            isLoading,
+            setIsLoading,
+            setEtherscanLink,
+            etherscanLink,
+            currentAccount
         }}
     >
         {children}
