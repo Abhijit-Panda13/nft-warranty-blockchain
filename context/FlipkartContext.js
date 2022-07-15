@@ -15,7 +15,7 @@ export const FlipkartProvider = ({ children }) => {
     const [nickname, setNickname] = useState('')
     const [username, setUsername] = useState('')
     const [assets, setAssets] = useState([])
-
+    const [recentTransactions, setRecentTransactions] = useState([])
 
   const {
     authenticate,
@@ -32,6 +32,11 @@ export const FlipkartProvider = ({ children }) => {
     isLoading: assetsDataIsLoading,
   } = useMoralisQuery('assets')
 
+  const {
+    data: userData,
+    error: userDataError,
+    isLoading: userDataIsLoading,
+  } = useMoralisQuery('_User')
 
   const getBalance = async () => {
     try {
@@ -140,6 +145,39 @@ export const FlipkartProvider = ({ children }) => {
     )
   }
 
+  const buyAsset = async (price, asset) => {
+    try {
+      if (!isAuthenticated) return
+      console.log('price: ', price)
+      console.log('asset: ', asset.name)
+      console.log(userData)
+
+      const options = {
+        type: 'erc20',
+        amount: price,
+        receiver: flipkartCoinAddress,
+        contractAddress: flipkartCoinAddress,
+      }
+
+      let transaction = await Moralis.transfer(options)
+      const receipt = await transaction.wait()
+
+      if (receipt) {
+        const res = userData[0].add('ownedAsset', {
+          ...asset,
+          purchaseDate: Date.now(),
+          etherscanLink: `https://mumbai.polygonscan.com/tx/${receipt.transactionHash}`,
+        })
+
+        await res.save().then(() => {
+          alert("You've successfully purchased this asset!")
+        })
+      }
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
 
 
   return (
@@ -161,7 +199,8 @@ export const FlipkartProvider = ({ children }) => {
             setEtherscanLink,
             etherscanLink,
             currentAccount,
-            buyTokens
+            buyTokens,
+            buyAsset
         }}
     >
         {children}
