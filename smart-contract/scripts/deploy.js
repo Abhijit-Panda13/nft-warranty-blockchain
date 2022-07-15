@@ -9,6 +9,7 @@ async function main() {
   console.log('Flipkart Coin deployed to:', flipkartCoin.address)
 }
 
+
 main()
   .then(() => process.exit(0))
   .catch(error => {

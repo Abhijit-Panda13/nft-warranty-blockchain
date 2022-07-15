@@ -12,7 +12,7 @@ import {
   ModalTransition,
 } from "react-simple-hook-modal";
 import "react-simple-hook-modal/dist/styles.css";
-// import BuyModal from "./BuyModal";
+import BuyModal from "./BuyModal";
 
 const Header = () => {
   const styles = {
@@ -25,8 +25,7 @@ const Header = () => {
     coins: `ml-[10px]`,
   };
 
-  const balance = "99";
-  //   const { balance, buyTokens, getBalance } = useContext(FlipkartContext);
+  const { balance, buyTokens, getBalance } = useContext(FlipkartContext);
   const { openModal, isModalOpen, closeModal } = useModal();
   return (
     <ModalProvider>
@@ -57,9 +56,9 @@ const Header = () => {
               onClick={openModal}
             >
               {balance}
-              <FaCoins className={styles.coins} />
-              <Modal isOpen={isModalOpen} transition={ModalTransition.SCALE}>
-                {/* <BuyModal close={closeModal} /> */}
+              <Image alt="supercoin logo" width = "23px" height = "23px" src="https://rukminim1.flixcart.com/lockin/32/32/images/super_coin_icon_22X22.png?q=90" />
+              <Modal isOpen={isModalOpen} >
+                <BuyModal close={closeModal} buyTokens={buyTokens} />
               </Modal>
             </div>
           ) : (
@@ -67,9 +66,9 @@ const Header = () => {
               className={(styles.balance, styles.menuItem)}
               onClick={openModal}
             >
-              0 SC <FaCoins className={styles.coins} />
-              <Modal isOpen={isModalOpen} transition={ModalTransition.SCALE}>
-                {/* <BuyModal close={closeModal} /> */}
+              0 <Image alt="supercoin logo" width = "23px" height = "23px" src="https://rukminim1.flixcart.com/lockin/32/32/images/super_coin_icon_22X22.png?q=90" />
+              <Modal isOpen={isModalOpen}>
+                <BuyModal close={closeModal} buyTokens={buyTokens} />
               </Modal>
             </div>
           )}

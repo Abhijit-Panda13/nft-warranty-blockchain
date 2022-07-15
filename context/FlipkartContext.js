@@ -32,6 +32,29 @@ export const FlipkartProvider = ({ children }) => {
     isLoading: assetsDataIsLoading,
   } = useMoralisQuery('assets')
 
+
+  const getBalance = async () => {
+    try {
+      if (!isAuthenticated || !currentAccount) return
+      const options = {
+        contractAddress: flipkartCoinAddress,
+        functionName: 'balanceOf',
+        abi: flipkartAbi,
+        params: {
+          account: currentAccount,
+        },
+      }
+
+      if (isWeb3Enabled) {
+        const response = await Moralis.executeFunction(options)
+        console.log(response.toString())
+        setBalance(response.toString())
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
     async function fetchData() {
         if(isAuthenticated) {
@@ -43,7 +66,7 @@ export const FlipkartProvider = ({ children }) => {
         }
     }
     fetchData();
-  }, [isAuthenticated, user, username, currentAccount])
+  }, [isAuthenticated, user, username, currentAccount, getBalance])
 
   useEffect(() =>{
     async function fetchData() {
@@ -113,31 +136,11 @@ export const FlipkartProvider = ({ children }) => {
     setIsLoading(false)
     console.log(receipt)
     setEtherscanLink(
-        `https://polygonscan.com/tx/${receipt.transactionHash}`,
+        `https://mumbai.polygonscan.com/tx/${receipt.transactionHash}`,
     )
   }
 
-  const getBalance = async () => {
-    try {
-      if (!isAuthenticated || !currentAccount) return
-      const options = {
-        contractAddress: flipkartCoinAddress,
-        functionName: 'balanceOf',
-        abi: flipkartAbi,
-        params: {
-          account: currentAccount,
-        },
-      }
 
-      if (isWeb3Enabled) {
-        const response = await Moralis.executeFunction(options)
-        console.log(response.toString())
-        setBalance(response.toString())
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
   return (
     <FlipkartContext.Provider
@@ -157,7 +160,8 @@ export const FlipkartProvider = ({ children }) => {
             setIsLoading,
             setEtherscanLink,
             etherscanLink,
-            currentAccount
+            currentAccount,
+            buyTokens
         }}
     >
         {children}

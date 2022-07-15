@@ -20,6 +20,7 @@
   "dependencies": {
     "@nomiclabs/hardhat-waffle": "^2.0.3",
     "@openzeppelin/contracts": "^4.7.0",
-    "dotenv": "^16.0.1"
+    "dotenv": "^16.0.1",
+    "nft.storage": "^6.4.0"
   }
 }
