@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
-import logo from '../assets/flipkart_logo.jpg'
-import logoFull from '../assets/flipkart_full_logo.jpg'
+import logo from '../assets/flipkart_logo.png'
+import logoFull from '../assets/flipkart_full_logo.png'
 import Image from 'next/image'
 import { FaBox } from 'react-icons/fa'
 import { BsFillBookmarkFill } from 'react-icons/bs'
@@ -21,7 +21,7 @@ const Sidebar = () => {
     menu: `flex flex-col w-full h-full px-10 gap-10`,
     menuItem: `flex items-center text-lg font-bold cursor-pointer gap-2`,
     flipkartLogo: `mr-4 flex object-cover`,
-    companyName: `text-lg font-bold flex flex-1 pl-10 items-center mt-[20px]`,
+    companyName: `text-lg font-bold flex flex-1 pl-10 items-center mb-[20px] mr-[20px]`,
     usernameInput: `bg-transparent border-white border-2 rounded-lg w-[80%] py-2 px-4 text-lg mt-[20px] placeholder:text-white focus:outline-none flex justify-center items-center text-white`,
     username: `flex items-center w-full justify-center`,
     setNickname: `text-lg font-bold flex flex-1 items-center mt-[20px] mb-[20px] text-white`,
@@ -112,7 +112,7 @@ const Sidebar = () => {
         </Link>
       </div>
       <div className={styles.companyName}>
-        <Image src={logoFull} alt='flipkart' height={100} width={100} />
+        <Image src={logoFull} alt='flipkart' height={200} width={250} />
       </div>
     </div>
   )
