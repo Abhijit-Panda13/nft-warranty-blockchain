@@ -16,6 +16,7 @@ export const FlipkartProvider = ({ children }) => {
     const [username, setUsername] = useState('')
     const [assets, setAssets] = useState([])
     const [recentTransactions, setRecentTransactions] = useState([])
+    const [ownedItems, setOwnedItems] = useState([])
 
   const {
     authenticate,
@@ -60,10 +61,27 @@ export const FlipkartProvider = ({ children }) => {
     }
   }
 
+  const listenToUpdates = async () => {
+    let query = new Moralis.Query('EthTransactions')
+    let subscription = await query.subscribe()
+    console.log("Subscription", subscription)
+    subscription.on('update', async object => {
+      console.log('New Transactions')
+      console.log(object)
+      setRecentTransactions([object])
+    })
+  }
+  
+
   useEffect(() => {
     async function fetchData() {
+      if (!isWeb3Enabled) {
+        await enableWeb3()
+      }
         if(isAuthenticated) {
             await getBalance()
+            await listenToUpdates()
+            console.log("Recents", recentTransactions)
             const currentUsername = await user?.get('nickname')
             setUsername(currentUsername);
             const account = await user?.get('ethAddress');
@@ -71,18 +89,23 @@ export const FlipkartProvider = ({ children }) => {
         }
     }
     fetchData();
-  }, [isAuthenticated, user, username, currentAccount, getBalance])
+  }, [isAuthenticated, user, username, currentAccount, getBalance, listenToUpdates])
 
   useEffect(() =>{
     async function fetchData() {
         console.log(assetsData)
+        await enableWeb3()
         await getAssets()
+        await getOwnedAssets()
     }
     if(isWeb3Enabled){
         fetchData()
     }
     
   }, [isWeb3Enabled, assetsData, assetsDataIsLoading])
+
+
+
 
 
   const connectWallet = async () => {
@@ -163,7 +186,7 @@ export const FlipkartProvider = ({ children }) => {
       const receipt = await transaction.wait()
 
       if (receipt) {
-        const res = userData[0].add('ownedAsset', {
+        const res = userData[0].add('ownedAssets', {
           ...asset,
           purchaseDate: Date.now(),
           etherscanLink: `https://mumbai.polygonscan.com/tx/${receipt.transactionHash}`,
@@ -177,6 +200,24 @@ export const FlipkartProvider = ({ children }) => {
       console.log(error.message)
     }
   }
+
+  const getOwnedAssets = async () => {
+    try {
+      // let query = new Moralis.Query('_User')
+      // let results = await query.find()
+
+      if (userData[0]) {
+        setOwnedItems(prevItems => [
+          ...prevItems,
+          userData[0].attributes.ownedAssets,
+        ])
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
 
 
 
@@ -200,7 +241,9 @@ export const FlipkartProvider = ({ children }) => {
             etherscanLink,
             currentAccount,
             buyTokens,
-            buyAsset
+            buyAsset,
+            recentTransactions,
+            ownedItems,
         }}
     >
         {children}
