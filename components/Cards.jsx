@@ -5,7 +5,7 @@ import { FlipkartContext } from '../context/FlipkartContext'
 const Cards = () => {
   const styles = {
     container: `h-full w-full flex flex-col ml-[20px] -mt-[0px]`,
-    title: `text-xl font-bolder mb-[20px] mt-[30px]  ml-[30px]`,
+    title: `text-xl font-bolder mb-[20px] mt-[30px] flex items-center justify-center`,
     cards: `flex items-center  flex-wrap gap-[80px]`,
   }
   const { assets } = useContext(FlipkartContext)

@@ -15,7 +15,8 @@ export const FlipkartProvider = ({ children }) => {
     const [nickname, setNickname] = useState('')
     const [username, setUsername] = useState('')
     const [assets, setAssets] = useState([])
-
+    const [recentTransactions, setRecentTransactions] = useState([])
+    const [ownedItems, setOwnedItems] = useState([])
 
   const {
     authenticate,
@@ -32,6 +33,11 @@ export const FlipkartProvider = ({ children }) => {
     isLoading: assetsDataIsLoading,
   } = useMoralisQuery('assets')
 
+  const {
+    data: userData,
+    error: userDataError,
+    isLoading: userDataIsLoading,
+  } = useMoralisQuery('_User')
 
   const getBalance = async () => {
     try {
@@ -55,10 +61,27 @@ export const FlipkartProvider = ({ children }) => {
     }
   }
 
+  const listenToUpdates = async () => {
+    let query = new Moralis.Query('EthTransactions')
+    let subscription = await query.subscribe()
+    console.log("Subscription", subscription)
+    subscription.on('update', async object => {
+      console.log('New Transactions')
+      console.log(object)
+      setRecentTransactions([object])
+    })
+  }
+  
+
   useEffect(() => {
     async function fetchData() {
+      if (!isWeb3Enabled) {
+        await enableWeb3()
+      }
         if(isAuthenticated) {
             await getBalance()
+            await listenToUpdates()
+            console.log("Recents", recentTransactions)
             const currentUsername = await user?.get('nickname')
             setUsername(currentUsername);
             const account = await user?.get('ethAddress');
@@ -66,18 +89,23 @@ export const FlipkartProvider = ({ children }) => {
         }
     }
     fetchData();
-  }, [isAuthenticated, user, username, currentAccount, getBalance])
+  }, [isAuthenticated, user, username, currentAccount, getBalance, listenToUpdates])
 
   useEffect(() =>{
     async function fetchData() {
         console.log(assetsData)
+        await enableWeb3()
         await getAssets()
+        await getOwnedAssets()
     }
     if(isWeb3Enabled){
         fetchData()
     }
     
   }, [isWeb3Enabled, assetsData, assetsDataIsLoading])
+
+
+
 
 
   const connectWallet = async () => {
@@ -140,6 +168,57 @@ export const FlipkartProvider = ({ children }) => {
     )
   }
 
+  const buyAsset = async (price, asset) => {
+    try {
+      if (!isAuthenticated) return
+      console.log('price: ', price)
+      console.log('asset: ', asset.name)
+      console.log(userData)
+
+      const options = {
+        type: 'erc20',
+        amount: price,
+        receiver: flipkartCoinAddress,
+        contractAddress: flipkartCoinAddress,
+      }
+
+      let transaction = await Moralis.transfer(options)
+      const receipt = await transaction.wait()
+
+      if (receipt) {
+        const res = userData[0].add('ownedAssets', {
+          ...asset,
+          purchaseDate: Date.now(),
+          etherscanLink: `https://mumbai.polygonscan.com/tx/${receipt.transactionHash}`,
+        })
+
+        await res.save().then(() => {
+          alert("You've successfully purchased this asset!")
+        })
+      }
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
+  const getOwnedAssets = async () => {
+    try {
+      // let query = new Moralis.Query('_User')
+      // let results = await query.find()
+
+      if (userData[0]) {
+        setOwnedItems(prevItems => [
+          ...prevItems,
+          userData[0].attributes.ownedAssets,
+        ])
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
+
 
 
   return (
@@ -161,7 +240,10 @@ export const FlipkartProvider = ({ children }) => {
             setEtherscanLink,
             etherscanLink,
             currentAccount,
-            buyTokens
+            buyTokens,
+            buyAsset,
+            recentTransactions,
+            ownedItems,
         }}
     >
         {children}
