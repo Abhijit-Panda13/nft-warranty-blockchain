@@ -168,14 +168,14 @@ export const FlipkartProvider = ({ children }) => {
     )
   }
 
-  const buyAsset = async (price, asset, id) => {
+  const buyAsset = async (quant, price, asset, id) => {
     try {
       if (!isAuthenticated) return
       // await enableWeb3()
       console.log('price: ', price)
       console.log('asset: ', asset.name)
       console.log(userData)
-      const period = 60;
+      const period = 120;
       const options = {
         type: 'erc20',
         amount: price,
@@ -198,6 +198,7 @@ export const FlipkartProvider = ({ children }) => {
           user_account: currentAccount,
           purchased_product_id: id,
           product_warranty_period: period,
+          quantity: quant,
           transactionID: hash
         },
       }
@@ -209,7 +210,8 @@ export const FlipkartProvider = ({ children }) => {
       if (receiptNFT) {
         const res = userData[0].add('ownedAssets', {
           src: asset.src,
-          price: asset.price,
+          quantity: quant,
+          price: price,
           name: asset.name,
           createdAt: asset.createdAt,
           updatedAt: asset.updatedAt,

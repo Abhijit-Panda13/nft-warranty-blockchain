@@ -24,9 +24,9 @@ const Warranty = ({ id, purTime, setCheck }) => {
   return (
     <div>
     {
-        purTime+120000 < curTime ? <div>Warranty Over!!!</div>
+        purTime+120000 < curTime ? <div className='ml-20'>Warranty Over!!!</div>
         :
-        <div>Warranty time left - About {Math.floor((purTime+120000-curTime)/(1000*60*60))} h {Math.floor(((purTime+120000-curTime) - ((Math.floor((purTime+120000-curTime)/(1000*60*60))*1000*60*60)))/(1000*60))+1} mins</div>
+        <div className='ml-10'>Warranty time left - About {Math.floor((purTime+120000-curTime)/(1000*60*60))} h {Math.floor(((purTime+120000-curTime) - ((Math.floor((purTime+120000-curTime)/(1000*60*60))*1000*60*60)))/(1000*60))+1} mins</div>
     }
     </div>
   )

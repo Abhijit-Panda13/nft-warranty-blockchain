@@ -61,12 +61,12 @@ const Transaction = ({ item }) => {
                   width={100}
                 />
                 <div className={styles.nameContainer}>
-                  <div className={styles.itemName}>{asset.name}</div>
+                  <div className={styles.itemName}>{asset.name}</div><div className='relative left-60 bottom-7 font-bold'> Quantity - {asset.quantity}</div>
                   <div className='flex flex-row items-center justify-center gap-4'>
                     <div className={styles.buyAgainBtn}>Buy it Again</div>
                     <Link href={`${asset.etherscanLink}`}>
                       <a target='_blank' rel='noopener'>
-                        <div className={styles.etherscanBtn}>Etherscan</div>
+                        <div className={styles.etherscanBtn}>PolygonScan</div>
                       </a>
                     </Link>
                   </div>
@@ -74,7 +74,7 @@ const Transaction = ({ item }) => {
                   {asset.warrantyValid ?
                     <Warranty setCheck={setCheck} id = {asset.transactionID} purTime = {asset.purchaseDate}/>
                   :
-                    <div>Warranty Over!!!</div>
+                    <div className='ml-20'>Warranty Over!!!</div>
                   }
                   </div>
                 </div>
