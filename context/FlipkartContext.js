@@ -208,7 +208,11 @@ export const FlipkartProvider = ({ children }) => {
       console.log("Receipttt", receiptNFT);
       if (receiptNFT) {
         const res = userData[0].add('ownedAssets', {
-          ...asset,
+          src: asset.src,
+          price: asset.price,
+          name: asset.name,
+          createdAt: asset.createdAt,
+          updatedAt: asset.updatedAt,
           purchaseDate: Date.now(),
           warrantyValid: true,
           transactionID: receipt.transactionHash,
