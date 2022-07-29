@@ -109,7 +109,7 @@ const Card = ({ item, id }) => {
           <button
             className={styles.buttons}
             disabled={product == 0}
-            onClick={() => buyAsset(item.price * product, item, id)}
+            onClick={() => buyAsset(product, item.price * product, item, id)}
           >
             Buy
           </button>

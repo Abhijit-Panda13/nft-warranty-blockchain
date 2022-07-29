@@ -168,14 +168,14 @@ export const FlipkartProvider = ({ children }) => {
     )
   }
 
-  const buyAsset = async (price, asset, id) => {
+  const buyAsset = async (quant, price, asset, id) => {
     try {
       if (!isAuthenticated) return
-      await enableWeb3()
+      // await enableWeb3()
       console.log('price: ', price)
       console.log('asset: ', asset.name)
       console.log(userData)
-      const period = 60;
+      const period = 120;
       const options = {
         type: 'erc20',
         amount: price,
@@ -198,6 +198,7 @@ export const FlipkartProvider = ({ children }) => {
           user_account: currentAccount,
           purchased_product_id: id,
           product_warranty_period: period,
+          quantity: quant,
           transactionID: hash
         },
       }
@@ -208,7 +209,12 @@ export const FlipkartProvider = ({ children }) => {
       console.log("Receipttt", receiptNFT);
       if (receiptNFT) {
         const res = userData[0].add('ownedAssets', {
-          ...asset,
+          src: asset.src,
+          quantity: quant,
+          price: price,
+          name: asset.name,
+          createdAt: asset.createdAt,
+          updatedAt: asset.updatedAt,
           purchaseDate: Date.now(),
           warrantyValid: true,
           transactionID: receipt.transactionHash,
@@ -240,6 +246,30 @@ export const FlipkartProvider = ({ children }) => {
     }
   }
 
+  const warrantyUpdate = async(ID) => {
+    try {
+      let check = 0;
+      if (userData[0]) {
+        userData[0].attributes.ownedAssets.map((asset)=>{
+          if(asset.transactionID === ID && asset.warrantyValid === true){
+            asset.warrantyValid = false;
+          }else if(asset.transactionID === ID && asset.warrantyValid === false){
+            check = 1;
+            return;
+          }
+        }, ID)
+        if(check === 1){
+          return;
+        }
+        const res = userData[0].set('ownedAssets', userData[0].attributes.ownedAssets);
+        await res.save().then(() => {
+          alert("Warranty done for", ID);
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
 
 
@@ -267,6 +297,7 @@ export const FlipkartProvider = ({ children }) => {
             buyAsset,
             recentTransactions,
             ownedItems,
+            warrantyUpdate
         }}
     >
         {children}
