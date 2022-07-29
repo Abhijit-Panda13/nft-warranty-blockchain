@@ -1,14 +1,14 @@
-import React, { useContext } from 'react'
-import logo from '../assets/flipkart_logo.png'
-import logoFull from '../assets/flipkart_full_logo.png'
-import Image from 'next/image'
-import { FaBox } from 'react-icons/fa'
-import { BsFillBookmarkFill } from 'react-icons/bs'
-import { BsFillPersonFill } from 'react-icons/bs'
-import { ConnectButton } from 'web3uikit'
-import { AiOutlineHistory } from 'react-icons/ai'
-import Link from 'next/link'
-import { FlipkartContext } from '../context/FlipkartContext'
+import React, { useContext } from "react";
+import logo from "../assets/flipkart_logo.png";
+import logoFull from "../assets/flipkart_full_logo.png";
+import Image from "next/image";
+import { FaBox } from "react-icons/fa";
+import { BsFillBookmarkFill } from "react-icons/bs";
+import { BsFillPersonFill } from "react-icons/bs";
+import { ConnectButton } from "web3uikit";
+import { AiOutlineHistory } from "react-icons/ai";
+import Link from "next/link";
+import { FlipkartContext } from "../context/FlipkartContext";
 
 const Sidebar = () => {
   const styles = {
@@ -25,7 +25,7 @@ const Sidebar = () => {
     usernameInput: `bg-transparent border-white border-2 rounded-lg w-[80%] py-2 px-4 text-lg mt-[20px] placeholder:text-white focus:outline-none flex justify-center items-center text-white`,
     username: `flex items-center w-full justify-center`,
     setNickname: `text-lg font-bold flex flex-1 items-center mt-[20px] mb-[20px] text-white`,
-  }
+  };
 
   const {
     isAuthenticated,
@@ -33,7 +33,7 @@ const Sidebar = () => {
     setNickname,
     username,
     handleSetUsername,
-  } = useContext(FlipkartContext)
+  } = useContext(FlipkartContext);
   console.log("Username", username);
 
   return (
@@ -43,8 +43,8 @@ const Sidebar = () => {
           <>
             <div className={styles.profilePicContainer}>
               <Image
-                src={`https://avatars.dicebear.com/api/pixel-art/${username}.svg`}
-                alt='profile'
+                src={`https://avatars.dicebear.com/api/micah/${username}.svg`}
+                alt="profile"
                 className={styles.profilePic}
                 height={100}
                 width={100}
@@ -54,11 +54,11 @@ const Sidebar = () => {
               <>
                 <div className={styles.username}>
                   <input
-                    type='text'
-                    placeholder='Username'
+                    type="text"
+                    placeholder="Username"
                     className={styles.usernameInput}
                     value={nickname}
-                    onChange={e => setNickname(e.target.value)}
+                    onChange={(e) => setNickname(e.target.value)}
                   />
                 </div>
                 <button
@@ -80,7 +80,7 @@ const Sidebar = () => {
         </div>
       </div>
       <div className={styles.menu}>
-        <Link href='/'>
+        <Link href="/">
           <div className={styles.menuItem}>
             <Image
               src={logo}
@@ -104,7 +104,7 @@ const Sidebar = () => {
           <BsFillPersonFill />
           Profile
         </div>
-        <Link href='/history'>
+        <Link href="/history">
           <div className={styles.menuItem}>
             <AiOutlineHistory />
             Transaction History
@@ -112,10 +112,10 @@ const Sidebar = () => {
         </Link>
       </div>
       <div className={styles.companyName}>
-        <Image src={logoFull} alt='flipkart' height={200} width={250} />
+        <Image src={logoFull} alt="flipkart" height={200} width={250} />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;

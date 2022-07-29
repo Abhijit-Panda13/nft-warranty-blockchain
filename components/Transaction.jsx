@@ -1,8 +1,9 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useEffect, useContext, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import moment from 'moment'
 import { FlipkartContext } from '../context/FlipkartContext'
+import Warranty from './Warranty'
 
 
 const Transaction = ({ item }) => {
@@ -19,9 +20,13 @@ const Transaction = ({ item }) => {
     buyAgainBtn: `bg-[#ffd713] font-bold rounded-full p-[10px] h-[40px] w-[200px] cursor-pointer text-[#3a2802] text-center mb-[5px] mt-[10px]`,
     etherscanBtn: `font-bold rounded-full h-[40px] w-[150px] cursor-pointer text-[#3a2802] text-center border-2 border-[#ffd713] flex justify-center items-center`,
   }
-
+  let time = Date.now();
+  // let time = new Date().toLocaleString();
+  const [check, setCheck] = useState(0);
+  const [cTime, setTime] = useState(time);
+  // console.log(cTime);
   const { username } = useContext(FlipkartContext)
-
+  
   return (
     <>
       {item.map((asset, index) => {
@@ -56,14 +61,21 @@ const Transaction = ({ item }) => {
                   width={100}
                 />
                 <div className={styles.nameContainer}>
-                  <div className={styles.itemName}>{asset.name}</div>
+                  <div className={styles.itemName}>{asset.name}</div><div className='relative left-60 bottom-7 font-bold'> Quantity - {asset.quantity}</div>
                   <div className='flex flex-row items-center justify-center gap-4'>
                     <div className={styles.buyAgainBtn}>Buy it Again</div>
                     <Link href={`${asset.etherscanLink}`}>
                       <a target='_blank' rel='noopener'>
-                        <div className={styles.etherscanBtn}>Etherscan</div>
+                        <div className={styles.etherscanBtn}>PolygonScan</div>
                       </a>
                     </Link>
+                  </div>
+                  <div>
+                  {asset.warrantyValid ?
+                    <Warranty setCheck={setCheck} id = {asset.transactionID} purTime = {asset.purchaseDate}/>
+                  :
+                    <div className='ml-20'>Warranty Over!!!</div>
+                  }
                   </div>
                 </div>
               </div>
@@ -76,3 +88,5 @@ const Transaction = ({ item }) => {
 }
 
 export default Transaction
+// {Math.floor((asset.purchaseDate-cTime)/1000)}
+//  {(asset.purchaseDate+60-cTime) - ((asset.purchaseDate+60-cTime)/1000/60/60)*1000*60*60)}

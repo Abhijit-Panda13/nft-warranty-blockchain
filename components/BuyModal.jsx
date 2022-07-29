@@ -34,7 +34,7 @@ const BuyModal = ({ close, buyTokens }) => {
     calculatePrice()
   }, [tokenAmount])
 
-  console.log("HI");
+  // console.log("HI");
 
   const calculatePrice = () => {
     const price = parseFloat(tokenAmount * 0.0001)
