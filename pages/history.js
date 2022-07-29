@@ -17,6 +17,7 @@ const history = () => {
   // useEffect(() => {
   //   console.log(ownedItems)
   // }, [])
+  console.log(ownedItems);
 
   return (
     <div className={styles.container}>
