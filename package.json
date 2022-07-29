@@ -9,9 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.1.2",
+    "@fortawesome/free-regular-svg-icons": "^6.1.2",
+    "@fortawesome/free-solid-svg-icons": "^6.1.2",
     "@walletconnect/web3-provider": "^1.7.8",
     "@web3auth/web3auth": "^1.1.1",
     "ethers": "^5.6.9",
+    "font-awesome": "^4.7.0",
     "magic-sdk": "^8.1.1",
     "moment": "^2.29.4",
     "moralis": "^1.8.1",
@@ -28,6 +32,7 @@
     "autoprefixer": "^10.4.7",
     "eslint": "8.19.0",
     "eslint-config-next": "12.2.2",
+    "file-loader": "^6.2.0",
     "postcss": "^8.4.14",
     "tailwindcss": "^3.1.6"
   }

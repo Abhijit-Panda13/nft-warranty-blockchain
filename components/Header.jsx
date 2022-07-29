@@ -68,7 +68,7 @@ const Header = () => {
             >
               0 <Image alt="supercoin logo" width = "23px" height = "23px" src="https://rukminim1.flixcart.com/lockin/32/32/images/super_coin_icon_22X22.png?q=90" />
               <Modal isOpen={isModalOpen}>
-                <BuyModal close={closeModal} buyTokens={buyTokens} />
+                <BuyModal close={closeModal} buyTokens={buyTokens}/>
               </Modal>
             </div>
           )}
