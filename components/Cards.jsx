@@ -15,10 +15,10 @@ const Cards = () => {
       <div className={styles.title}>New Release</div>
       <div className={styles.cards}>
         <div className={styles.cards}>
-          {assets.map(item => {
+          {assets.map((item, index) => {
             let asset = item.attributes
 
-            return <Card key={item.id} item={item.attributes} />
+            return <Card id = {index} key={item.id} item={item.attributes} />
           })}
         </div>
       </div>

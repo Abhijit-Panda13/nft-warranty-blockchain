@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from 'react'
 import { useMoralis, useMoralisQuery } from 'react-moralis'
-import { flipkartAbi, flipkartCoinAddress } from '../lib/constants'
+import { flipkartAbi, flipkartCoinAddress, flipkartNFTAddress, flipkartNFTAbi } from '../lib/constants'
 import { ethers } from 'ethers'
 
 export const FlipkartContext = createContext()
@@ -168,13 +168,14 @@ export const FlipkartProvider = ({ children }) => {
     )
   }
 
-  const buyAsset = async (price, asset) => {
+  const buyAsset = async (price, asset, id) => {
     try {
       if (!isAuthenticated) return
+      await enableWeb3()
       console.log('price: ', price)
       console.log('asset: ', asset.name)
       console.log(userData)
-
+      const period = 60;
       const options = {
         type: 'erc20',
         amount: price,
@@ -184,12 +185,34 @@ export const FlipkartProvider = ({ children }) => {
 
       let transaction = await Moralis.transfer(options)
       const receipt = await transaction.wait()
+      console.log("Receipt1", receipt);
+      const hash = receipt.transactionHash;
 
-      if (receipt) {
+
+      console.log(flipkartNFTAddress)
+      let optionsNFT = {
+        contractAddress: flipkartNFTAddress,
+        functionName: 'mintProductNFT',
+        abi: flipkartNFTAbi,
+        params: {
+          user_account: currentAccount,
+          purchased_product_id: id,
+          product_warranty_period: period,
+          transactionID: hash
+        },
+      }
+
+      let transactionNFT = await Moralis.executeFunction(optionsNFT)
+      const receiptNFT = await transactionNFT.wait()
+      setIsLoading(false)
+      console.log("Receipttt", receiptNFT);
+      if (receiptNFT) {
         const res = userData[0].add('ownedAssets', {
           ...asset,
           purchaseDate: Date.now(),
-          etherscanLink: `https://mumbai.polygonscan.com/tx/${receipt.transactionHash}`,
+          warrantyValid: true,
+          transactionID: receipt.transactionHash,
+          etherscanLink: `https://mumbai.polygonscan.com/tx/${receiptNFT.transactionHash}`,
         })
 
         await res.save().then(() => {

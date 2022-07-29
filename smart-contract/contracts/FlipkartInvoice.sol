@@ -5,10 +5,11 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@chainlink/contracts/src/v0.8/KeeperCompatible.sol";
 
-contract Invoice is ERC1155, KeeperCompatibleInterface {
+contract FlipkartInvoice is ERC1155, KeeperCompatibleInterface {
     uint256 head;
     uint256 tail;
     struct ProductInfo {
+        string ID;
         uint256 product_id;
         uint256 next_index;
         uint256 time_of_purchase;
@@ -22,9 +23,10 @@ contract Invoice is ERC1155, KeeperCompatibleInterface {
         tail = 0;
     }
 
-    function mintProductNFT(address user_account, uint256 purchased_product_id, uint256 product_warranty_period) external {
+    function mintProductNFT(address user_account, uint256 purchased_product_id, uint256 product_warranty_period, string memory transactionID) external {
         _mint(user_account, purchased_product_id, 1, "");
         ProductInfo memory new_product_info = ProductInfo({
+            ID: transactionID, 
             product_id: purchased_product_id,
             next_index: tail + 1,
             time_of_purchase: block.timestamp,
