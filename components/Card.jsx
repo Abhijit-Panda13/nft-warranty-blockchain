@@ -53,7 +53,7 @@ const Card = ({ item, id }) => {
           onClick={() => { setProductQuantity(product+1) }}
         />
 
-        <button className={styles.buttons} onClick={() => buyAsset(item.price*product, item, id)}>Buy</button>
+        <button className={styles.buttons} onClick={() => buyAsset(product, item.price*product, item, id)}>Buy</button>
       </div>
       </div>
     </div>
