@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect} from 'react'
 import { FlipkartContext } from '../context/FlipkartContext'
 
-
+let check = 0;
 const Warranty = ({ id, purTime, setCheck }) => {
     const { warrantyUpdate } = useContext(FlipkartContext)
     let time = Date.now();
@@ -11,10 +11,13 @@ const Warranty = ({ id, purTime, setCheck }) => {
     async function fetchData() {
         if((purTime+120000) < curTime){
             warrantyUpdate(id);
-            window.location.reload();
+            check = 1;
         }
     }
-    fetchData();
+    if(check == 0){
+        fetchData();
+    }
+    
     useEffect(() => {
         setInterval(() => {
           setTime(time);
@@ -26,7 +29,7 @@ const Warranty = ({ id, purTime, setCheck }) => {
     {
         purTime+120000 < curTime ? <div className='ml-20'>Warranty Over!!!</div>
         :
-        <div className='ml-10'>Warranty time left - About {Math.floor((purTime+120000-curTime)/(1000*60*60))} h {Math.floor(((purTime+120000-curTime) - ((Math.floor((purTime+120000-curTime)/(1000*60*60))*1000*60*60)))/(1000*60))+1} mins</div>
+        <div className='ml-10'> Warranty time left - About {Math.floor((purTime+120000-curTime)/(1000*60*60))} h {Math.floor(((purTime+120000-curTime) - ((Math.floor((purTime+120000-curTime)/(1000*60*60))*1000*60*60)))/(1000*60))+1} mins</div>
     }
     </div>
   )

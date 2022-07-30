@@ -40,7 +40,7 @@ const Transaction = ({ item }) => {
                 </div>
                 <div className={styles.topHeaderText}>
                   TOTAL <br />
-                  {asset.price} AC
+                  {asset.price} SC
                 </div>
                 <div className={styles.topHeaderText}>
                   SHIP TO <br />

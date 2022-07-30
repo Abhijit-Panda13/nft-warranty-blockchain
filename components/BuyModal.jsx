@@ -4,7 +4,7 @@ import { FlipkartContext } from '../context/FlipkartContext'
 import { HashLoader } from 'react-spinners'
 import Link from 'next/link'
 
-const BuyModal = ({ close, buyTokens }) => {
+const BuyModal = ({ closeModal, buyTokens }) => {
   const styles = {
     container: `h-full w-full flex flex-col `,
     closeX: `w-full h-[50px] flex items-center justify-end mb-[20px]`,
@@ -55,10 +55,10 @@ const BuyModal = ({ close, buyTokens }) => {
           <div className={styles.closeX}>
             <IoIosClose
               onClick={() => {
-                close()
                 setAmountDue('')
                 setTokenAmount('')
                 setEtherscanLink('')
+                closeModal();
               }}
               fontSize={50}
               className='cursor-pointer'

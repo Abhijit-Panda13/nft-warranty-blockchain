@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FlipkartContext } from "../context/FlipkartContext";
 
 import Cards from "./Cards";
@@ -6,6 +6,7 @@ import Cards from "./Cards";
 import Header from "./Header";
 
 const Main = () => {
+  const [dum, setDum] = useState(false);
   const styles = {
     container: `h-full w-full flex flex-col mt-[50px] pr-[50px] overflow-hidden`,
     recentTitle: `text-2xl font-bold text-center mb-[20px] text-center mt-[40px]`,
@@ -16,7 +17,7 @@ const Main = () => {
   console.log(recentTransactions);
   return (
     <div className={styles.container}>
-      <Header />
+      <Header setDum={setDum} dum={dum}/>
       {/* <Featured /> */}
       <Cards />
       {recentTransactions.length > 0 && (
