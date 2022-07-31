@@ -16,6 +16,8 @@
       'yamaha.ndcdn.in',
       'rukminim1.flixcart.com',
       'newassets.apollo247.com',
+      'images.bewakoof.com',
+      'cdn.shopify.com'
     ],
   },
 }
